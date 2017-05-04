@@ -11,7 +11,7 @@ import sdl2/sdl, texLoader, options
 
 type
   Object* = object
-    # 2D object with texture
+    ## 2D object with texture
     tex: Texture
     rect: ref Rect
 
