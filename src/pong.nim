@@ -59,8 +59,6 @@ when isMainModule:
 
   var
     pads: array[Position, Object]
-
-  let
     sep = initObject(renderer, SepTexPath).fatalOnNone()
     ball = initObject(renderer, BallTexPath).fatalOnNone()
 
