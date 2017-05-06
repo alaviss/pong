@@ -16,10 +16,10 @@ const
   SupportedFormat* = InitPng or InitJpg
     ## Supported texture format (PNG and JPG)
 
-template initTexLoader*(): cint = img.init(SupportedFormat)
+proc initTexLoader*(): cint {.inline.} = img.init(SupportedFormat)
   ## Initialize texture loader
 
-template quitTexLoader*() = img.quit()
+proc quitTexLoader*() {.inline.} = img.quit()
   ## De-initialize texture loader
 
 proc loadTexture*(renderer: Renderer not nil, file: string): Texture
