@@ -41,9 +41,10 @@ proc initObject*(renderer: Renderer not nil, path: string): Object
                 {.raises: [SdlError], tags: [IOEffect].} =
   result.tex = renderer.loadTexture(path)
 
-  sdlFatalIf:
-    result.tex.queryTexture(nil, nil, result.rect.w.addr(),
-                            result.rect.h.addr()) < 0
+  if result.tex.queryTexture(nil, nil, result.rect.w.addr(),
+                             result.rect.h.addr()) < 0:
+    result.tex.destroyTexture()
+    raiseSdlError()
 
 proc draw*(renderer: Renderer not nil, o: var Object): cint
           {.inline, noSideEffect.} =
