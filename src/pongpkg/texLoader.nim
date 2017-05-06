@@ -7,7 +7,7 @@
 # copyright.
 #
 
-from sdl2/sdl import Texture, Renderer, createTextureFromSurface
+from sdl2/sdl import Texture, Renderer, createTextureFromSurface, freeSurface
 import sdl2/sdl_image as img
 import errors
 export Texture
@@ -28,5 +28,6 @@ proc loadTexture*(renderer: Renderer not nil, file: string): Texture
   result = nil
   let surface = load(file)
   if surface.isNil(): raiseSdlError()
+  defer: surface.freeSurface()
 
   result = renderer.createTextureFromSurface(surface)
