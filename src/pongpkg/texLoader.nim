@@ -22,12 +22,16 @@ proc initTexLoader*(): cint {.inline.} = img.init(SupportedFormat)
 proc quitTexLoader*() {.inline.} = img.quit()
   ## De-initialize texture loader
 
-proc loadTexture*(renderer: Renderer not nil, file: string): Texture
+proc loadTexture*(renderer: Renderer not nil, file: string): Texture not nil
                  {.raises: [SdlError], tags: [].} =
   ## Load a texture
-  result = nil
   let surface = load(file)
   if surface.isNil(): raiseSdlError()
   defer: surface.freeSurface()
 
-  result = renderer.createTextureFromSurface(surface)
+  let res = renderer.createTextureFromSurface(surface)
+
+  if res.isNil():
+    raiseSdlError()
+  else:
+    result = res
