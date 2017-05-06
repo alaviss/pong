@@ -9,11 +9,12 @@
 
 from sdl2/sdl import Texture, Renderer, createTextureFromSurface
 import sdl2/sdl_image as img
+import errors
 export Texture
 
 const
   SupportedFormat* = InitPng or InitJpg
-    ## Supported texture format (PNG or JPG)
+    ## Supported texture format (PNG and JPG)
 
 template initTexLoader*(): cint = img.init(SupportedFormat)
   ## Initialize texture loader
@@ -22,10 +23,10 @@ template quitTexLoader*() = img.quit()
   ## De-initialize texture loader
 
 proc loadTexture*(renderer: Renderer not nil, file: string): Texture
-                 {.raises: [], tags: [].} =
+                 {.raises: [SdlError], tags: [].} =
   ## Load a texture
   result = nil
   let surface = load(file)
-  if surface.isNil(): return
+  if surface.isNil(): raiseSdlError()
 
   result = renderer.createTextureFromSurface(surface)

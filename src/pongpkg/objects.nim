@@ -7,7 +7,7 @@
 # copyright.
 #
 
-import sdl2/sdl, texLoader, options
+import sdl2/sdl, texLoader, errors
 
 type
   Object* = object
@@ -37,16 +37,13 @@ proc `y=`*(o: var Object, y: cint) {.noSideEffect.} =
 
 proc getTexture*(o: Object): Texture {.noSideEffect.} = o.tex
 
-proc initObject*(renderer: Renderer not nil, path: string): Option[Object]
-                {.raises: [], tags: [IOEffect].} =
-  var o: Object
+proc initObject*(renderer: Renderer not nil, path: string): Object
+                {.raises: [SdlError], tags: [IOEffect].} =
+  result.tex = renderer.loadTexture(path)
 
-  o.tex = renderer.loadTexture(path)
-
-  if o.tex.isNil(): return
-  if o.tex.queryTexture(nil, nil, o.rect.w.addr(), o.rect.h.addr()) < 0: return
-
-  result = some(o)
+  sdlFatalIf:
+    result.tex.queryTexture(nil, nil, result.rect.w.addr(),
+                            result.rect.h.addr()) < 0
 
 proc draw*(renderer: Renderer not nil, o: var Object): cint
           {.noSideEffect.} =

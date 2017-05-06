@@ -21,16 +21,11 @@ const
 type
   Position = enum Left, Right
 
-proc fatalOnNone[T](opt: Option[T]): T {.raises: [SdlError], tags: [].} =
-  if opt.isNone:
-    raise newException(SdlError, $sdl.getError())
-  else: result = opt.unsafeGet()
-
 # Ugly hack to cope with Nim compiler poor not nil analysis
 proc proveNotNil(p: Renderer): Renderer not nil
                 {.raises: [SdlError], tags: [].} =
   if p.isNil():
-    raise newException(SdlError, $sdl.getError())
+    raiseSdlError()
   else:
     result = p
 
@@ -52,10 +47,10 @@ when isMainModule:
 
   var
     pads: array[Position, Object]
-    sep = initObject(renderer, SepTexPath).fatalOnNone()
-    ball = initObject(renderer, BallTexPath).fatalOnNone()
+    sep = initObject(renderer, SepTexPath)
+    ball = initObject(renderer, BallTexPath)
 
-  pads[Left] = initObject(renderer, PadTexPath).fatalOnNone()
+  pads[Left] = initObject(renderer, PadTexPath)
   pads[Left].x = 0
   pads[Left].y = MainWin.h div 2 - pads[Left].h div 2
 
