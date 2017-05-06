@@ -7,7 +7,7 @@
 # copyright.
 #
 
-import sdl2/sdl, pongpkg/[texLoader, objects], options
+import sdl2/sdl, pongpkg/[texLoader, objects, errors], options
 from os import unixToNativePath
 
 const
@@ -19,14 +19,7 @@ const
   BallTexPath = unixToNativePath(AssetsDir & "/ball.png")
 
 type
-  SdlError* = object of Exception
-
   Position = enum Left, Right
-
-template sdlFatalIf*(cond: bool) =
-  if cond:
-    raise newException(SdlError, $sdl.getError())
-  else: discard
 
 proc fatalOnNone[T](opt: Option[T]): T {.raises: [SdlError], tags: [].} =
   if opt.isNone:
