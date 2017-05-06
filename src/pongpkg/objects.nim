@@ -15,27 +15,27 @@ type
     tex: Texture
     rect: Rect
 
-proc w*(o: Object): cint {.noSideEffect.} = o.rect.w
+proc w*(o: Object): cint {.inline, noSideEffect.} = o.rect.w
 
-proc h*(o: Object): cint {.noSideEffect.} = o.rect.h
+proc h*(o: Object): cint {.inline, noSideEffect.} = o.rect.h
 
-proc x*(o: Object): cint {.noSideEffect.} = o.rect.x
+proc x*(o: Object): cint {.inline, noSideEffect.} = o.rect.x
 
-proc y*(o: Object): cint {.noSideEffect.} = o.rect.y
+proc y*(o: Object): cint {.inline, noSideEffect.} = o.rect.y
 
-proc `w=`*(o: var Object, w: cint) {.noSideEffect.} =
+proc `w=`*(o: var Object, w: cint) {.inline, noSideEffect.} =
   o.rect.w = w
 
-proc `h=`*(o: var Object, h: cint) {.noSideEffect.} =
+proc `h=`*(o: var Object, h: cint) {.inline, noSideEffect.} =
   o.rect.h = h
 
-proc `x=`*(o: var Object, x: cint) {.noSideEffect.} =
+proc `x=`*(o: var Object, x: cint) {.inline, noSideEffect.} =
   o.rect.x = x
 
-proc `y=`*(o: var Object, y: cint) {.noSideEffect.} =
+proc `y=`*(o: var Object, y: cint) {.inline, noSideEffect.} =
   o.rect.y = y
 
-proc getTexture*(o: Object): Texture {.noSideEffect.} = o.tex
+proc getTexture*(o: Object): Texture {.inline, noSideEffect.} = o.tex
 
 proc initObject*(renderer: Renderer not nil, path: string): Object
                 {.raises: [SdlError], tags: [IOEffect].} =
@@ -46,5 +46,5 @@ proc initObject*(renderer: Renderer not nil, path: string): Object
                             result.rect.h.addr()) < 0
 
 proc draw*(renderer: Renderer not nil, o: var Object): cint
-          {.noSideEffect.} =
+          {.inline, noSideEffect.} =
   renderer.renderCopy(o.tex, nil, o.rect.addr())
