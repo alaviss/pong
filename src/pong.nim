@@ -7,7 +7,7 @@
 # copyright.
 #
 
-import sdl2/sdl, pongpkg/[texLoader, objects, errors], options
+import sdl2/sdl, pongpkg/[texLoader, objects, errors], options, basic2d
 from os import unixToNativePath
 
 const
@@ -17,6 +17,11 @@ const
   PadTexPath = unixToNativePath(AssetsDir & "/pad.png")
   SepTexPath = unixToNativePath(AssetsDir & "/sep.png")
   BallTexPath = unixToNativePath(AssetsDir & "/ball.png")
+
+  # Speeds
+  PadMaxSpeed = Vector2d(x: 0, y: 263)
+    ## Paddle max speed (distance from center to edge)
+  PadRawSpeed = Vector2d(x: 0, y: 2)
 
 type
   Position = enum Left, Right
@@ -66,9 +71,28 @@ when isMainModule:
     while true:
       while event.addr().pollEvent() > 0:
         case event.kind
+        of KeyDown:
+          case event.key.keysym.sym
+          of KDown:
+            if not (event.key.repeat > 0):
+              pads[Left].speed = PadRawSpeed
+          of KUp:
+            if not (event.key.repeat > 0):
+              pads[Left].speed = -PadRawSpeed
+          else: discard
+        of KeyUp:
+          case event.key.keysym.sym
+          of KDown, KUp:
+            pads[Left].speed = Vector2d(x: 0, y: 0)
+          else: discard
         of Quit: break main
         else: discard
 
+      # Logic path
+      # Pads movements
+      pads[Left].move()
+
+      # Render path
       # Background
       sdlFatalIf: renderer.setRenderDrawColor(0, 0, 0, AlphaOpaque) < 0
       sdlFatalIf: renderer.renderClear() < 0
