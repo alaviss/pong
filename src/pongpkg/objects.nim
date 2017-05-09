@@ -13,7 +13,7 @@ type
   Object* = object
     ## 2D object with texture
     tex: Texture
-    rect: Rect
+    rect*: Rect
 
 proc w*(o: Object): cint {.inline, noSideEffect.} = o.rect.w
 
