@@ -60,11 +60,11 @@ when isMainModule:
   sep.x = MainWin.w div 2 - sep.w div 2
   sep.y = 0
 
-  let event = new(Event)
+  var event: Event
 
   block main:
     while true:
-      while event[].addr().pollEvent() > 0:
+      while event.addr().pollEvent() > 0:
         case event.kind
         of Quit: break main
         else: discard
