@@ -74,11 +74,11 @@ when isMainModule:
       sdlFatalIf: renderer.renderClear() < 0
 
       # Seperator
-      sdlFatalIf: renderer.draw(sep) < 0
+      renderer.draw(sep)
 
       # Pads
-      sdlFatalIf: renderer.draw(pads[Left]) < 0
-      sdlFatalIf: renderer.draw(pads[Right]) < 0
+      renderer.draw(pads[Left])
+      renderer.draw(pads[Right])
 
       # Show render result
       renderer.renderPresent()

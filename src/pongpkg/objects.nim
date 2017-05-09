@@ -28,7 +28,7 @@ proc `x=`*(o: var Object, x: cint) {.inline, noSideEffect.} = o.rect.x = x
 proc `y=`*(o: var Object, y: cint) {.inline, noSideEffect.} = o.rect.y = y
 
 proc initObject*(renderer: Renderer not nil, path: string): Object
-                {.raises: [SdlError], tags: [IOEffect].} =
+                {.raises: [SdlError], tags: [ReadIOEffect].} =
   result.tex = renderer.loadTexture(path)
 
   if result.tex.queryTexture(nil, nil, result.rect.w.addr(),
@@ -36,6 +36,6 @@ proc initObject*(renderer: Renderer not nil, path: string): Object
     result.tex.destroyTexture()
     raiseSdlError()
 
-proc draw*(renderer: Renderer not nil, o: var Object): cint
-          {.inline, noSideEffect.} =
-  renderer.renderCopy(o.tex, nil, o.rect.addr())
+proc draw*(renderer: Renderer not nil, o: var Object)
+          {.inline, raises: [SdlError], tags: [WriteIOEffect].} =
+  sdlFatalIf: renderer.renderCopy(o.tex, nil, o.rect.addr()) < 0
