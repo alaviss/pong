@@ -23,19 +23,9 @@ proc x*(o: Object): cint {.inline, noSideEffect.} = o.rect.x
 
 proc y*(o: Object): cint {.inline, noSideEffect.} = o.rect.y
 
-proc `w=`*(o: var Object, w: cint) {.inline, noSideEffect.} =
-  o.rect.w = w
+proc `x=`*(o: var Object, x: cint) {.inline, noSideEffect.} = o.rect.x = x
 
-proc `h=`*(o: var Object, h: cint) {.inline, noSideEffect.} =
-  o.rect.h = h
-
-proc `x=`*(o: var Object, x: cint) {.inline, noSideEffect.} =
-  o.rect.x = x
-
-proc `y=`*(o: var Object, y: cint) {.inline, noSideEffect.} =
-  o.rect.y = y
-
-proc getTexture*(o: Object): Texture {.inline, noSideEffect.} = o.tex
+proc `y=`*(o: var Object, y: cint) {.inline, noSideEffect.} = o.rect.y = y
 
 proc initObject*(renderer: Renderer not nil, path: string): Object
                 {.raises: [SdlError], tags: [IOEffect].} =
