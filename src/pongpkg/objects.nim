@@ -7,13 +7,15 @@
 # copyright.
 #
 
-import sdl2/sdl, texLoader, errors
+import sdl2/sdl, texLoader, errors, basic2d
+export Vector2d
 
 type
   Object* = object
     ## 2D object with texture
     tex: Texture
     rect*: Rect
+    speed*: Vector2d
 
 proc w*(o: Object): cint {.inline, noSideEffect.} = o.rect.w
 
@@ -26,6 +28,10 @@ proc y*(o: Object): cint {.inline, noSideEffect.} = o.rect.y
 proc `x=`*(o: var Object, x: cint) {.inline, noSideEffect.} = o.rect.x = x
 
 proc `y=`*(o: var Object, y: cint) {.inline, noSideEffect.} = o.rect.y = y
+
+proc move*(o: var Object) {.inline, noSideEffect.} =
+  o.rect.x += o.speed.x.cint()
+  o.rect.y += o.speed.y.cint()
 
 proc initObject*(renderer: Renderer not nil, path: string): Object
                 {.raises: [SdlError], tags: [ReadIOEffect].} =
