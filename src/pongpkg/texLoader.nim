@@ -23,7 +23,7 @@ proc quitTexLoader*() {.inline.} = img.quit()
   ## De-initialize texture loader
 
 proc loadTexture*(renderer: Renderer not nil, file: string): Texture not nil
-                 {.raises: [SdlError], tags: [].} =
+                 {.raises: [SdlError], tags: [ReadIOEffect].} =
   ## Load a texture
   let surface = load(file)
   if surface.isNil(): raiseSdlError()
