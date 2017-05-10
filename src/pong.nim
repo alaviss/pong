@@ -57,12 +57,12 @@ when isMainModule:
 
   pads[Left] = initObject(renderer, PadTexPath)
   pads[Left].x = 0
-  pads[Left].y = MainWin.h div 2 - pads[Left].h div 2
+  pads[Left].y = (MainWin.h - pads[Left].h) / 2
 
   deepCopy(pads[Right], pads[Left])
-  pads[Right].x = MainWin.w - pads[Right].w
+  pads[Right].x = toFloat(MainWin.w - pads[Right].w)
 
-  sep.x = MainWin.w div 2 - sep.w div 2
+  sep.x = (MainWin.w - sep.w) / 2
   sep.y = 0
 
   var event: Event
