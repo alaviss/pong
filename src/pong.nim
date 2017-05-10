@@ -7,7 +7,7 @@
 # copyright.
 #
 
-import sdl2/sdl, pongpkg/[texLoader, objects, errors], options, basic2d
+import sdl2/sdl, pongpkg/[texLoader, objects, errors], options, basic2d, times
 from os import unixToNativePath
 
 const
@@ -21,7 +21,7 @@ const
   # Speeds
   PadMaxSpeed = Vector2d(x: 0, y: 263)
     ## Paddle max speed (distance from center to edge)
-  PadRawSpeed = Vector2d(x: 0, y: 2)
+  PadRawSpeed = Vector2d(x: 0, y: PadMaxSpeed.y)
 
 type
   Position = enum Left, Right
@@ -67,6 +67,7 @@ when isMainModule:
 
   var event: Event
 
+  var timer = epochTime()
   block main:
     while true:
       while event.addr().pollEvent() > 0:
@@ -90,7 +91,11 @@ when isMainModule:
 
       # Logic path
       # Pads movements
-      pads[Left].move()
+      let
+        curTime = epochTime()
+        step = curTime - timer
+      pads[Left].move(step)
+      timer = curTime
 
       # Render path
       # Background

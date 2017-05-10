@@ -18,9 +18,9 @@ type
     w*, h*: cint
     speed*: Vector2d
 
-proc move*(o: var Object) {.inline, noSideEffect.} =
-  o.x += o.speed.x
-  o.y += o.speed.y
+proc move*(o: var Object, timeStep: float) {.inline, noSideEffect.} =
+  o.x += o.speed.x * timeStep
+  o.y += o.speed.y * timeStep
 
 proc initObject*(renderer: Renderer not nil, path: string): Object
                 {.raises: [SdlError], tags: [ReadIOEffect].} =
