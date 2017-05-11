@@ -34,6 +34,17 @@ proc proveNotNil(p: Renderer): Renderer not nil
   else:
     result = p
 
+proc collideWall(o: var Object) {.noSideEffect.} =
+  if o.x < 0:
+    o.x = 0
+  elif (o.x.cint() + o.w) > MainWin.w:
+    o.x = toFloat(MainWin.w - o.w)
+
+  if o.y < 0:
+    o.y = 0
+  elif (o.y.cint() + o.h) > MainWin.h:
+    o.y = toFloat(MainWin.h - o.h)
+
 when isMainModule:
   sdlFatalIf: sdl.init(InitVideo) < 0
   defer: sdl.quit()
@@ -95,6 +106,7 @@ when isMainModule:
         curTime = epochTime()
         step = curTime - timer
       pads[Left].move(step)
+      pads[Left].collideWall()
       timer = curTime
 
       # Render path
