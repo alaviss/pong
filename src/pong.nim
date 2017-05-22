@@ -76,6 +76,10 @@ when isMainModule:
   sep.x = (MainWin.w - sep.w) / 2
   sep.y = 0
 
+  # Ball spawn at middle of player side
+  ball.x = (MainWin.w - ball.w) / 4
+  ball.y = (MainWin.h - ball.h) / 2
+
   var event: Event
 
   var timer = epochTime()
@@ -120,6 +124,9 @@ when isMainModule:
       # Pads
       renderer.draw(pads[Left])
       renderer.draw(pads[Right])
+
+      # Ball
+      renderer.draw(ball)
 
       # Show render result
       renderer.renderPresent()
