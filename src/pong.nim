@@ -23,8 +23,11 @@ const
     ## Paddle max speed (distance from center to edge)
   PadRawSpeed = Vector2d(x: 0, y: PadMaxSpeed.y)
 
+  BallSpeed = Vector2d(x: 136, y: 0) # Distance from ball spawn to pad
+
 type
   Position = enum Left, Right
+  Axis {.pure.} = enum X, Y
 
 # Ugly hack to cope with Nim compiler poor not nil analysis
 proc proveNotNil(p: Renderer): Renderer not nil
@@ -34,16 +37,30 @@ proc proveNotNil(p: Renderer): Renderer not nil
   else:
     result = p
 
-proc collideWall(o: var Object) {.noSideEffect.} =
-  if o.x < 0:
-    o.x = 0
-  elif (o.x.cint() + o.w) > MainWin.w:
-    o.x = toFloat(MainWin.w - o.w)
+proc collideWall(o: Object): set[Axis]
+                {.noSideEffect.} =
+  ## Returns the wall axises that the object has collided with
+  result = {}
 
-  if o.y < 0:
-    o.y = 0
-  elif (o.y.cint() + o.h) > MainWin.h:
-    o.y = toFloat(MainWin.h - o.h)
+  if (o.x < 0) or (o.x.cint() + o.w) > MainWin.w:
+    result.incl(Axis.X)
+
+  if (o.y < 0) or (o.y.cint() + o.h) > MainWin.h:
+    result.incl(Axis.Y)
+
+proc wallCollideFix(o: var Object, axises: set[Axis]) {.noSideEffect.} =
+  ## Move an object to it's collision point with the wall given the axises
+  if Axis.X in axises:
+    if o.x < 0:
+      o.x = 0
+    else:
+      o.x = toFloat(MainWin.w - o.w)
+
+  if Axis.Y in axises:
+    if o.y < 0:
+      o.y = 0
+    else:
+      o.y = toFloat(MainWin.h - o.h)
 
 when isMainModule:
   sdlFatalIf: sdl.init(InitVideo) < 0
@@ -110,7 +127,7 @@ when isMainModule:
         curTime = epochTime()
         step = curTime - timer
       pads[Left].move(step)
-      pads[Left].collideWall()
+      pads[Left].wallCollideFix(pads[Left].collideWall())
       timer = curTime
 
       # Render path
