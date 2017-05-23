@@ -97,6 +97,8 @@ when isMainModule:
   ball.x = (MainWin.w - ball.w) / 4
   ball.y = (MainWin.h - ball.h) / 2
 
+  ball.speed = -BallSpeed # Ball falls to player paddle
+
   var event: Event
 
   var timer = epochTime()
@@ -128,6 +130,10 @@ when isMainModule:
         step = curTime - timer
       pads[Left].move(step)
       pads[Left].wallCollideFix(pads[Left].collideWall())
+
+      ball.move(step)
+      ball.wallCollideFix(ball.collideWall() - {Axis.X})
+        # Ball will be consumed on X axis
       timer = curTime
 
       # Render path
