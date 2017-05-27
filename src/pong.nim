@@ -62,6 +62,15 @@ proc wallCollideFix(o: var Object, axises: set[Axis]) {.noSideEffect.} =
     else:
       o.y = toFloat(MainWin.h - o.h)
 
+proc consumeBall(o: var Object) {.noSideEffect.} =
+  ## Respawn ball to center of consumed side with velocity toward wall
+  o.y = (MainWin.h - o.h) / 2
+
+  if (o.x + o.w.toFloat() - MainWin.w.toFloat()) > 0:
+    o.x = MainWin.w.toFloat() * 0.75 - o.w.toFloat() * 0.5
+  else:
+    o.x = toFloat(MainWin.w - o.w) * 0.25
+
 when isMainModule:
   sdlFatalIf: sdl.init(InitVideo) < 0
   defer: sdl.quit()
@@ -132,8 +141,12 @@ when isMainModule:
       pads[Left].wallCollideFix(pads[Left].collideWall())
 
       ball.move(step)
-      ball.wallCollideFix(ball.collideWall() - {Axis.X})
+      let ballCollideWall = ball.collideWall()
+      ball.wallCollideFix(ballCollideWall - {Axis.X})
         # Ball will be consumed on X axis
+      if Axis.X in ballCollideWall:
+        ball.consumeBall()
+
       timer = curTime
 
       # Render path
