@@ -142,10 +142,10 @@ when isMainModule:
 
       ball.move(step)
       let ballCollideWall = ball.collideWall()
-      ball.wallCollideFix(ballCollideWall - {Axis.X})
-        # Ball will be consumed on X axis
       if Axis.X in ballCollideWall:
         ball.consumeBall()
+      elif Axis.Y in ballCollideWall:
+        ball.speed.rotate(degToRad(45))
 
       timer = curTime
 
